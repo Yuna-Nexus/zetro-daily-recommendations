@@ -1,0 +1,90 @@
+# Modification record
+
+Modified by Yuna-Nexus on 2026-10-26. This is a derivative of TideDra/zotero-arxiv-daily, upstream revision edc68632c9a861559ea376dfd34c3ab0b1e4f34a. Original author and contributor rights and AGPL-3.0 terms remain; see NOTICE.md and LICENSE.
+
+Changes: PubMed and optional Crossref feeds; exact persistent deduplication and recovery; task-based screening and semantic ranking; journal metrics and citations; concise reading cards; email confirmation with Zotero writing; configurable example deployment, privacy-safe defaults, tests and documentation. No personal deployment history or private state is distributed.
+
+Modified or added files relative to upstream (file-level notices also mark text sources where the format allows):
+
+- `.gitattributes` (consistent text handling; preserves original license and README bytes)
+- `docs/validation.md` (public-version validation, no personal deployment records)
+- `.env.example`
+- `.github/workflows/ci.yml`
+- `.github/workflows/main.yml`
+- `.gitignore`
+- `.python-version`
+- `NOTICE.md`
+- `README.md`
+- `config/base.yaml`
+- `config/custom.yaml`
+- `config/default.yaml`
+- `docs/deploy.md`
+- `docs/operations.md`
+- `docs/public-release-plan.md`
+- `feedback/.dev.vars.example`
+- `feedback/index.js`
+- `feedback/package-lock.json`
+- `feedback/package.json`
+- `feedback/schema.sql`
+- `feedback/test/harness.js`
+- `feedback/test/http-server.js`
+- `feedback/test/local-entry.js`
+- `feedback/test/worker.test.js`
+- `feedback/wrangler.toml`
+- `feedback/zotero.js`
+- `pyproject.toml`
+- `src/zotero_arxiv_daily/__init__.py`
+- `src/zotero_arxiv_daily/construct_email.py`
+- `src/zotero_arxiv_daily/dedup.py`
+- `src/zotero_arxiv_daily/executor.py`
+- `src/zotero_arxiv_daily/journal_metrics.py`
+- `src/zotero_arxiv_daily/main.py`
+- `src/zotero_arxiv_daily/ops.py`
+- `src/zotero_arxiv_daily/protocol.py`
+- `src/zotero_arxiv_daily/reranker/__init__.py`
+- `src/zotero_arxiv_daily/reranker/api.py`
+- `src/zotero_arxiv_daily/reranker/base.py`
+- `src/zotero_arxiv_daily/reranker/local.py`
+- `src/zotero_arxiv_daily/retriever/__init__.py`
+- `src/zotero_arxiv_daily/retriever/arxiv_retriever.py`
+- `src/zotero_arxiv_daily/retriever/base.py`
+- `src/zotero_arxiv_daily/retriever/biorxiv_retriever.py`
+- `src/zotero_arxiv_daily/retriever/chemrxiv_retriever.py`
+- `src/zotero_arxiv_daily/retriever/journal_retriever.py`
+- `src/zotero_arxiv_daily/retriever/medrxiv_retriever.py`
+- `src/zotero_arxiv_daily/retriever/pubmed_retriever.py`
+- `src/zotero_arxiv_daily/screening.py`
+- `src/zotero_arxiv_daily/selection.py`
+- `src/zotero_arxiv_daily/state.py`
+- `src/zotero_arxiv_daily/utils.py`
+- `tests/__init__.py`
+- `tests/canned_responses.py`
+- `tests/conftest.py`
+- `tests/reranker/__init__.py`
+- `tests/reranker/conftest.py`
+- `tests/reranker/test_api_reranker.py`
+- `tests/reranker/test_base_reranker.py`
+- `tests/reranker/test_local_reranker.py`
+- `tests/retriever/__init__.py`
+- `tests/retriever/arxiv_rss_example.xml`
+- `tests/retriever/conftest.py`
+- `tests/retriever/test_arxiv_retriever.py`
+- `tests/retriever/test_base_retriever.py`
+- `tests/retriever/test_biorxiv_retriever.py`
+- `tests/retriever/test_chemrxiv_retriever.py`
+- `tests/retriever/test_medrxiv_retriever.py`
+- `tests/smoke_worker.py`
+- `tests/state_stub.py`
+- `tests/test_construct_email.py`
+- `tests/test_daily_recommendations.py`
+- `tests/test_executor.py`
+- `tests/test_literature_mvp.py`
+- `tests/test_main.py`
+- `tests/test_protocol.py`
+- `tests/test_public_version.py`
+- `tests/test_utils.py`
+- `tests/utils/mock_openai/Dockerfile`
+- `tests/utils/mock_openai/openai_server.py`
+- `tests/utils/mock_zotero/Dockerfile`
+- `uv.lock`
+- `MODIFICATIONS.md` (this record)

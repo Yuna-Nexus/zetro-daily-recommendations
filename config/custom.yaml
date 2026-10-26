@@ -1,0 +1,83 @@
+# Modified by Yuna-Nexus on 2026-10-26; see NOTICE.md. SPDX-License-Identifier: AGPL-3.0-only
+# Example only: replace topics, queries and screening.profile with your research needs.
+zotero:
+  user_id: ${oc.env:ZOTERO_ID}
+  api_key: ${oc.env:ZOTERO_KEY}
+  include_path: ["AI Paper Recommendations"]
+
+email:
+  sender: ${oc.env:SENDER}
+  receiver: ${oc.env:RECEIVER}
+  smtp_server: ${oc.env:SMTP_SERVER}
+  smtp_port: 465
+  tls_mode: ssl # Use starttls and port 587 if required by your provider
+  sender_password: ${oc.env:SENDER_PASSWORD}
+
+llm:
+  api:
+    key: ${oc.env:OPENAI_API_KEY}
+    base_url: ${oc.env:OPENAI_API_BASE}
+  api_mode: chat_completion
+  language: Chinese
+  generation_kwargs:
+    model: ${oc.env:LLM_MODEL}
+    max_tokens: 1024
+
+source:
+  arxiv:
+    category: null
+    fetch_full_text: false
+  pubmed:
+    journals: ["npj Digital Medicine"] # Optional, searched alongside topics
+  journal:
+    journals: [] # Optional Crossref: [{name: "Nature Machine Intelligence", issn: "2522-5839"}]
+
+topics:
+  - name: 临床决策智能体
+    description: >-
+      Clinical decision-support agents integrating patient information, evidence and guidelines.
+      Prefer evaluated decision workflows and clinician-AI collaboration, not generic disease classifiers.
+    arxiv_query: >-
+      (ti:clinical OR abs:clinical) AND (ti:agent OR abs:agentic)
+      AND (ti:decision OR abs:decision)
+    pubmed_query: >-
+      ("clinical decision"[tiab] OR "clinical reasoning"[tiab])
+      AND (agentic[tiab] OR "AI agent"[tiab] OR "large language model"[tiab])
+  - name: 智能体可靠性评测
+    description: >-
+      Reliable clinical-agent evaluation: evidence faithfulness, tool use, uncertainty,
+      realistic workflows, human agreement and rubric-based evaluation. Prefer reusable methods.
+    arxiv_query: >-
+      (ti:clinical OR abs:clinical) AND (ti:agent OR abs:agent)
+      AND (ti:evaluation OR abs:benchmark OR abs:faithfulness)
+    pubmed_query: >-
+      clinical[tiab] AND ("large language model"[tiab] OR agentic[tiab])
+      AND (evaluation[tiab] OR benchmark[tiab] OR reliability[tiab])
+
+screening:
+  enabled: true
+  batch_size: 6
+  profile: >-
+    示例课题是临床决策智能体与可靠性评测。核心组：直接可对标的临床决策系统、证据整合和安全评估；
+    交叉组：可迁移的人机协作、工具使用、证据忠实性、评测协议；探索组：有具体可借鉴技术的相邻研究。
+    仅有医疗或智能体关键词、没有明确研究用途的论文排除。更换方向时同步修改本段和 topics。
+
+executor:
+  source: [arxiv, pubmed]
+  max_paper_num: 10
+  min_score: 0.0
+  explore_ratio: 0.2
+  group_weights: {core: 5, cross: 3, explore: 2}
+  preview_path: outputs/daily-preview.html
+  preview_use_cache: true
+  embedding_candidate_limit: 60
+
+retrieval:
+  initial_days: 30
+  overlap_days: 14
+  max_age_days: 30
+
+journal_metrics:
+  filter_by_jcr: false # Enable only after checking coverage and interpretation
+  fetch_citations: true
+  focus_journals: ["npj Digital Medicine"]

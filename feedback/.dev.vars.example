@@ -1,0 +1,3 @@
+# 仅本地 Worker 调试；正式部署使用 wrangler secret put。不要提交真实值。
+FEEDBACK_API_TOKEN=generate-a-new-random-secret-at-least-32-characters
+ZOTERO_WRITE_KEY=your-separate-zotero-read-write-key

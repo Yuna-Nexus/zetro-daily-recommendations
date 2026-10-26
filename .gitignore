@@ -1,0 +1,33 @@
+# Modified by Yuna-Nexus on 2026-10-26; see NOTICE.md. SPDX-License-Identifier: AGPL-3.0-only
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+.vscode/
+*.egg-info
+.env
+.env.*
+!.env.example
+api.txt
+*.pem
+*.key
+
+# Virtual environments
+.venv
+test.ipynb
+
+logs
+models
+test-compose.yml
+outputs
+config/private.yaml
+feedback/node_modules/
+feedback/.wrangler/
+feedback/.dev.vars
+feedback/.dev.vars.*
+!feedback/.dev.vars.example
+*.sqlite*
+*.db
+state-backup*.sql

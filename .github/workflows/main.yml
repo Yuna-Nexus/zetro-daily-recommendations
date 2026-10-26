@@ -1,0 +1,91 @@
+# Modified by Yuna-Nexus on 2026-10-26; see NOTICE.md. SPDX-License-Identifier: AGPL-3.0-only
+name: Daily literature recommendations
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Preview only; no email or production state changes
+        type: boolean
+        default: true
+      prepare_only:
+        description: Prepare candidate queue and caches without email (uncheck dry_run)
+        type: boolean
+        default: false
+  schedule:
+    # Monday-Saturday 08:00 Asia/Shanghai = 00:00 UTC. GitHub may delay scheduled jobs.
+    - cron: '0 0 * * 1-6'
+
+permissions:
+  contents: read
+concurrency:
+  group: daily-literature
+  cancel-in-progress: false
+
+jobs:
+  calculate-and-send:
+    if: ${{ github.event_name == 'workflow_dispatch' || vars.ENABLE_SCHEDULE == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Check feedback service
+        env:
+          FEEDBACK_BASE_URL: ${{ vars.FEEDBACK_BASE_URL }}
+          FEEDBACK_API_TOKEN: ${{ secrets.FEEDBACK_API_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          from urllib.parse import urlsplit
+          base = os.environ['FEEDBACK_BASE_URL'].rstrip('/')
+          assert urlsplit(base).scheme == 'https', 'Feedback service requires HTTPS'
+          request = urllib.request.Request(base + '/api/state',
+              data=json.dumps({'action':'get', 'key':'cache:connectivity-check'}).encode(),
+              headers={'Authorization':'Bearer ' + os.environ['FEEDBACK_API_TOKEN'],
+                       'User-Agent':'zotero-arxiv-daily/1.0',
+                       'Content-Type':'application/json'})
+          with urllib.request.urlopen(request, timeout=30) as response:
+              assert response.status == 200
+              json.load(response)
+          print('Feedback service authentication and database read passed')
+          PY
+
+      - name: Run script
+        env:
+          ZOTERO_ID: ${{ secrets.ZOTERO_ID }}
+          ZOTERO_KEY: ${{ secrets.ZOTERO_KEY }}
+          SENDER: ${{ secrets.SENDER }}
+          RECEIVER: ${{ secrets.RECEIVER }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
+          LLM_MODEL: ${{ vars.LLM_MODEL }}
+          FEEDBACK_BASE_URL: ${{ vars.FEEDBACK_BASE_URL }}
+          FEEDBACK_API_TOKEN: ${{ secrets.FEEDBACK_API_TOKEN }}
+          EASYSCHOLAR_SECRET_KEY: ${{ secrets.EASYSCHOLAR_SECRET_KEY }}
+          NCBI_EMAIL: ${{ secrets.NCBI_EMAIL }}
+          NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
+          EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+          PREPARE_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.prepare_only || false }}
+          CUSTOM_CONFIG: ${{ vars.CUSTOM_CONFIG }}
+          OMP_NUM_THREADS: '2'
+          MKL_NUM_THREADS: '2'
+        run: |
+          if [ -n "$CUSTOM_CONFIG" ]; then
+            printf "%s\n" "$CUSTOM_CONFIG" > config/custom.yaml
+          fi
+          uv run --locked src/zotero_arxiv_daily/main.py executor.dry_run="$DRY_RUN" executor.prepare_only="$PREPARE_ONLY"
+      - name: Upload preview
+        if: ${{ github.event_name == 'workflow_dispatch' && (inputs.dry_run || inputs.prepare_only) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-preview
+          retention-days: 3
+          path: outputs/daily-preview.*
+          if-no-files-found: ignore

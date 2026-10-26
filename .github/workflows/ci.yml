@@ -1,0 +1,42 @@
+# Modified by Yuna-Nexus on 2026-10-26; see NOTICE.md. SPDX-License-Identifier: AGPL-3.0-only
+name: CI
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7.1.4
+
+      - name: Run Pytest
+        run: |
+          uv run --locked pytest --cov=src/zotero_arxiv_daily --cov-report=term-missing
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Feedback security and recovery tests
+        run: node --test feedback/test/*.test.js
+      - name: Offline end-to-end confirmation flow
+        run: |
+          node feedback/test/http-server.js > "$RUNNER_TEMP/feedback-test.log" 2>&1 &
+          bridge_pid=$!
+          trap 'kill "$bridge_pid" 2>/dev/null || true' EXIT
+          curl --retry 10 --retry-connrefused --retry-delay 1 --max-time 3 --silent --output /dev/null http://127.0.0.1:18787/confirm
+          uv run --locked python -m tests.smoke_worker

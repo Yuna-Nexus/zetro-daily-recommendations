@@ -1,0 +1,18 @@
+# Modified by Yuna-Nexus on 2026-10-26; see NOTICE.md. SPDX-License-Identifier: AGPL-3.0-only
+name = "zetro-daily-feedback"
+main = "index.js"
+compatibility_date = "2026-10-23"
+
+[vars]
+ZOTERO_LIBRARY_TYPE = "user"
+ZOTERO_LIBRARY_ID = "REPLACE_WITH_ZOTERO_USER_ID"
+ZOTERO_COLLECTION = "REPLACE_WITH_COLLECTION_KEY"
+SOURCE_URL = "https://github.com/Yuna-Nexus/zetro-daily-recommendations"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "zetro-daily-state"
+database_id = "00000000-0000-0000-0000-000000000000"
+
+[observability]
+enabled = false
