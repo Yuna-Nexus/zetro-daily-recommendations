@@ -61,8 +61,8 @@ executor:
   prepare_only: false
   debug: false # Whether to use debug mode. Example: true
   send_empty: false # Whether to send an empty email even if no new papers today. Example: true
-  max_paper_num: 20
-  explore_ratio: 0.1
+  max_paper_num: ??? # Set explicitly before running; maximum 100 per email batch
+  explore_ratio: 0.0
   min_score: 3.0
   dry_run: false
   preview_path: outputs/weekly-preview.html

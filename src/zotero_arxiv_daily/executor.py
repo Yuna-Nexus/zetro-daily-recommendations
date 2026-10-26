@@ -40,6 +40,9 @@ def normalize_path_patterns(patterns: list[str] | ListConfig | None, config_key:
 class Executor:
     def __init__(self, config:DictConfig):
         self.config = config
+        count = config.executor.max_paper_num
+        if type(count) is not int or not 1 <= count <= 100:
+            raise ValueError("Set executor.max_paper_num to an integer from 1 to 100 before running")
         self.include_path_patterns = normalize_path_patterns(config.zotero.include_path, "include_path")
         self.ignore_path_patterns = normalize_path_patterns(config.zotero.ignore_path, "ignore_path")
         self.retrievers = {

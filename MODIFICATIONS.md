@@ -4,6 +4,8 @@ Modified by Yuna-Nexus on 2026-10-26. This is a derivative of TideDra/zotero-arx
 
 Changes: PubMed and optional Crossref feeds; exact persistent deduplication and recovery; task-based screening and semantic ranking; journal metrics and citations; concise reading cards; email confirmation with Zotero writing; configurable example deployment, privacy-safe defaults, tests and documentation. No personal deployment history or private state is distributed.
 
+2026-10-26 update: public deployments must choose their own per-run count. Group quotas are optional; no schedule is installed until a deployer chooses their weekdays/time. Missing or unsupported counts fail before initializing external clients. The maintainer's private deployment is separate.
+
 Modified or added files relative to upstream (file-level notices also mark text sources where the format allows):
 
 - `.gitattributes` (consistent text handling; preserves original license and README bytes)

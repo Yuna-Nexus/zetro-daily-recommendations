@@ -1,11 +1,15 @@
 # Modified by Yuna-Nexus on 2026-10-26; see NOTICE.md. SPDX-License-Identifier: AGPL-3.0-only
 """The public version must use the configured field, including nonmedical research."""
 import json
+import pytest
+from omegaconf import MissingMandatoryValue
 
 from tests.canned_responses import make_sample_paper
 from zotero_arxiv_daily.protocol import Paper
 from zotero_arxiv_daily.screening import screen_papers
 from zotero_arxiv_daily.selection import select_papers
+from zotero_arxiv_daily.selection import shortlist_papers
+from zotero_arxiv_daily.executor import Executor
 
 
 def test_screening_uses_supplied_nonmedical_profile(monkeypatch):
@@ -40,3 +44,22 @@ def test_non_ai_research_is_not_demoted_by_field():
     adjacent = make_sample_paper(title='LLM agent', abstract='A large language model.', score=8,
                                  published='2026-10-24', relevance_level=2, recommendation_group='core')
     assert select_papers([adjacent, core], limit=1, group_weights={'core': 1}) == [core]
+
+
+def test_no_group_quotas_shortlists_by_relevance():
+    from datetime import datetime, timezone
+    core = make_sample_paper(title='Direct research', published='2026-10-24', relevance_level=3,
+                             recommendation_group='core')
+    cross = make_sample_paper(title='Related method', published='2026-10-24', relevance_level=2,
+                              recommendation_group='cross')
+    now = datetime(2026, 10, 26, tzinfo=timezone.utc)
+    assert shortlist_papers([cross, core], 1, None, now) == [core]
+
+
+@pytest.mark.parametrize('count', ['???', 0, -1, 101, True, 1.5])
+def test_count_must_be_chosen_before_external_initialization(config, monkeypatch, count):
+    config.executor.max_paper_num = count
+    monkeypatch.setattr('zotero_arxiv_daily.executor.get_reranker_cls',
+                        lambda *a: pytest.fail('Model initialization must not happen'))
+    with pytest.raises((MissingMandatoryValue, ValueError)):
+        Executor(config)

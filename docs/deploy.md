@@ -10,9 +10,13 @@
 
 - `topics`：自己的主题名称、研究描述、arXiv/PubMed 检索式。
 - `screening.profile`：哪些直接有用、哪些可借鉴、哪些不要；这是入排标准。
+- `executor.max_paper_num`：必填，每次推送的篇数上限，填写 1–100 的整数（受现有邮件批次容量限制），不保证凑足。
+- `executor.group_weights`：可选的核心/交叉/探索比例，填 `null` 则不按比例预留名额；设置比例后允许合格论文补位。
 - `source.pubmed.journals`：关注期刊，主题检索与期刊检索同时存在；不需要时用 `[]`。
 - `zotero.include_path`：提供兴趣参考的 Collection 路径；也可设 `null` 使用全库。
 - `email.smtp_port/tls_mode`：默认 SSL 465；要求 STARTTLS 时改为 587 / `starttls`。
+
+示例中的篇数 `???` 表示尚未填写，不能原样运行。不要把维护者自己的篇数、比例和推送时间当作部署要求。若让 AI 协助，先告诉它自己的篇数、比例偏好、推送周期/星期/时间及所在时区。
 
 示例课题可以改成其他学科；PubMed 覆盖生物医学，其他学科主要使用 arXiv。禁用不需要的来源时修改 `executor.source`，原有其他来源仍保留代码与基础配置。
 
@@ -94,12 +98,25 @@ AI API 需要兼容 Chat Completions；如有额外生成参数，修改 `llm.ge
 
 ## 5. 先验证，再开启定时
 
-1. Actions → **Daily literature recommendations** → **Run workflow**，保持 `dry_run=true`、`prepare_only=false`。成功后下载 `daily-preview`，打开 HTML，检查检索结果和摘要。
+1. 填写篇数上限后，进入 Actions → **Literature recommendations** → **Run workflow**，保持 `dry_run=true`、`prepare_only=false`。成功后下载 `daily-preview`，打开 HTML，检查检索结果和摘要。
 2. 可选预热：取消 `dry_run`，勾选 `prepare_only`。此模式保存候选和缓存，但不发邮件、不创建收藏链接、不写入 Zotero。两个选项不能同时勾选。
 3. 使用测试 Collection 联调：两个选项都取消勾选，运行一次真实邮件；确认邮件到达、JCR/IF 显示符合预期。
 4. 从邮件点击保存：打开页面尚不入库，点“确认收藏”后才保存。重复确认不应新增条目；不操作的论文保持未处理。验证后在 Worker 配置中切回正式 Collection 并重新部署。
-5. 把 `ENABLE_SCHEDULE` 改成 `true`。默认周一至周六北京时间 08:00 开始，处理完成后发送；没有合格论文时不发。
+5. 按自己的需求在工作流中添加定时规则，再把 `ENABLE_SCHEDULE` 改成 `true`。没有添加规则就只支持手动运行；没有合格论文时不发。
 
 取消定时只需将该变量改回 `false`。手动运行入口仍然可用。不同部署各自维护去重状态，删除或重建 D1 会丢失推送历史。
 
-如要改时间，编辑 `.github/workflows/main.yml` 的 cron，使用 **UTC**；北京时间减八小时。公开仓库长时间无活动可能被 GitHub 停用定时任务，定期查看 Actions 状态；详见[官方定时说明](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)。
+## 6. 设置自己的比例和推送时间
+
+`executor.group_weights: null` 表示不限制各组比例。需要比例时，填自己的权重，例如 `{core: 4, cross: 1, explore: 1}`；这只是格式示例，不是默认要求。保持 `explore_ratio: 0.0` 即不额外预留探索名额；使用分组权重时按 `group_weights` 分配，不再叠加该探索比例。
+
+模板没有预设定时。在 `.github/workflows/main.yml` 的 `on:` 下添加与 `workflow_dispatch:` 同级的 `schedule:` 字段，保留原有手动参数。例如以下仅演示**每天北京时间 21:30**，请换成自己决定的规则：
+
+```yaml
+  schedule:
+    - cron: '30 13 * * *'
+```
+
+cron 使用 **UTC**；北京时间减八小时，其他地区还要注意时区及夏令时。设置完成后提交到自己的默认分支，并启用 `ENABLE_SCHEDULE=true`。定时是开始运行的时间，不保证此时邮件已经送达。
+
+公开仓库长时间无活动可能被 GitHub 停用定时任务，定期查看 Actions 状态；详见[官方定时说明](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)。

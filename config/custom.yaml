@@ -64,10 +64,10 @@ screening:
 
 executor:
   source: [arxiv, pubmed]
-  max_paper_num: 10
+  max_paper_num: ??? # Required: choose your own per-run limit (1-100)
   min_score: 0.0
-  explore_ratio: 0.2
-  group_weights: {core: 5, cross: 3, explore: 2}
+  explore_ratio: 0.0 # No reserved exploration quota unless you choose one
+  group_weights: null # Optional: set your own core/cross/explore weights
   preview_path: outputs/daily-preview.html
   preview_use_cache: true
   embedding_candidate_limit: 60

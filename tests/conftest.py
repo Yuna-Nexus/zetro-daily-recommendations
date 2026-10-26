@@ -46,6 +46,7 @@ def _base_config():
                 "executor.reranker=api",
                 "executor.debug=false",
                 "executor.send_empty=false",
+                "executor.max_paper_num=20",
                 "executor.preview_use_cache=false",
                 "executor.group_weights=null",
                 "screening.enabled=false",

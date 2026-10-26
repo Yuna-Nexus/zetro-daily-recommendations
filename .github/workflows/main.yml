@@ -1,5 +1,5 @@
 # Modified by Yuna-Nexus on 2026-10-26; see NOTICE.md. SPDX-License-Identifier: AGPL-3.0-only
-name: Daily literature recommendations
+name: Literature recommendations
 on:
   workflow_dispatch:
     inputs:
@@ -11,9 +11,7 @@ on:
         description: Prepare candidate queue and caches without email (uncheck dry_run)
         type: boolean
         default: false
-  schedule:
-    # Monday-Saturday 08:00 Asia/Shanghai = 00:00 UTC. GitHub may delay scheduled jobs.
-    - cron: '0 0 * * 1-6'
+  # Add schedule here only after choosing your own weekdays/time; see docs/deploy.md.
 
 permissions:
   contents: read

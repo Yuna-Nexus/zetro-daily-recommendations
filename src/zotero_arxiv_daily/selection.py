@@ -46,7 +46,8 @@ def shortlist_papers(papers, limit, group_weights, now):
         fresh = date is not None and (now - date).days < 7
         authority = {"Q1": 2, "Q2": 1, "Q3": 0}.get((p.metrics or {}).get("jcr"), 1)
         return *research_priority(p), fresh, authority, p.published
-    return allocate_groups(sorted(papers, key=order, reverse=True), limit, group_weights)
+    ordered = sorted(papers, key=order, reverse=True)
+    return allocate_groups(ordered, limit, group_weights) if group_weights else ordered[:limit]
 
 
 def select_papers(ranked, limit=20, explore_ratio=0.1, min_score=0.0, group_weights=None, now=None):
