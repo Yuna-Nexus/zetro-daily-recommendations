@@ -16,7 +16,7 @@ const headers = {'Cache-Control':'no-store', 'Referrer-Policy':'strict-origin', 
   'Content-Security-Policy':"default-src 'none'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'"};
 function json(value, status = 200) { return Response.json(value, {status, headers}); }
 function html(body, status = 200, extra = {}) {
-  return new Response('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>文献确认</title><body>' + body + '<hr><small>zetro-daily-recommendations · <a href="/source">源码（AGPL-3.0）</a> · <a href="https://github.com/Yuna-Nexus/zetro-daily-recommendations/blob/main/LICENSE">许可证</a> · 不提供担保</small></body></html>',
+  return new Response('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>文献确认</title><body>' + body + '<hr><small>zetro-daily-recommendations · 原作 TideDra 及贡献者；改造 © 2026 Yuna-Nexus · 可按 AGPL-3.0 再分发 · <a href="/source">源码（AGPL-3.0）</a> · <a href="https://github.com/Yuna-Nexus/zetro-daily-recommendations/blob/main/LICENSE">许可证</a> · 不提供担保</small></body></html>',
     {status, headers:{...headers, 'Content-Type':'text/html; charset=utf-8', ...extra}});
 }
 function statement(env, sql, ...args) { return env.DB.prepare(sql).bind(...args); }

@@ -88,6 +88,8 @@ npx wrangler deploy
 
 AI API 需要兼容 Chat Completions；如有额外生成参数，修改 `llm.generation_kwargs`。模型第一次下载和向量计算可能较慢，后续利用 D1 缓存。云端默认使用原 Embedding 模型，不需要额外 Embedding Key。
 
+默认 Jina 模型权重采用 CC BY-NC 4.0，仅凭本项目的 AGPL 源码授权不能商用模型。商业部署先取得模型许可，或替换 `reranker.local.model`/使用许可合适的 Embedding 服务，并按模型要求调整编码参数、重新验证效果；详见 [NOTICE](../NOTICE.md)。
+
 不要将 `ZOTERO_WRITE_KEY` 放进 Actions，也不要把 `.env`、`.dev.vars`、数据库备份上传。公开仓库的日志与预览不是私密存储；有保密要求使用私有部署仓库。[GitHub Artifact 可见性说明](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/download-workflow-artifacts)。
 
 ## 5. 先验证，再开启定时

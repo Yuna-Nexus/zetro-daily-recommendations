@@ -11,7 +11,11 @@ test('source access is public, configurable and never writes Zotero',async()=>{
   assert.equal(response.status,302);
   assert.equal(response.headers.get('Location'),s.env.SOURCE_URL);
   const page=await s.request('/confirm?token=invalid');
-  assert.match(await page.text(),/href="\/source"/);
+  const notice=await page.text();
+  assert.match(notice,/href="\/source"/);
+  assert.match(notice,/TideDra/);
+  assert.match(notice,/© 2026 Yuna-Nexus/);
+  assert.match(notice,/可按 AGPL-3.0 再分发/);
   assert.equal(s.calls.length,0);
   s.env.SOURCE_URL='javascript:alert(1)';
   assert.equal((await s.request('/source')).status,400);

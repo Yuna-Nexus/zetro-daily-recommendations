@@ -48,6 +48,8 @@
 
 Python 3.13+、uv、Node.js 24+。内部 Python 模块名继续使用 `zotero_arxiv_daily`，避免无关改名。
 
+默认下载的 [Jina 语义模型](https://huggingface.co/jinaai/jina-embeddings-v5-text-nano-retrieval)采用 **CC BY-NC 4.0**，模型权重不随仓库分发。项目源码的 AGPL 许可不授予该模型的商用权；商业部署需另获模型授权，或换用许可合适的模型/服务。见 [NOTICE.md](NOTICE.md)。
+
 ```sh
 uv sync --locked
 uv run --locked pytest

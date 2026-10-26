@@ -8,6 +8,7 @@ Modified or added files relative to upstream (file-level notices also mark text 
 
 - `.gitattributes` (consistent text handling; preserves original license and README bytes)
 - `docs/validation.md` (public-version validation, no personal deployment records)
+- `docs/privacy-and-license-audit.md` (2026-10-26 privacy and license recheck; model license clarification and confirmation-page notices)
 - `.env.example`
 - `.github/workflows/ci.yml`
 - `.github/workflows/main.yml`
