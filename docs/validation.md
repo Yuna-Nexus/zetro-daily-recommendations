@@ -14,4 +14,5 @@
 
 云端 CI 和公开状态以本仓库 Actions / GitHub 页面为准；该记录不保证其他账号、第三方 API 配额或网络始终可用。
 
-- [新仓库云端 CI](https://github.com/Yuna-Nexus/zetro-daily-recommendations/actions/runs/40257352595) 通过：Python、Worker 以及离线端到端步骤全部成功。仓库已公开并启用模板创建；查询确认生产 Secrets 和 Variables 均为 0。源码版本 2aaee00；后续只更新部署样例/验证记录，没有改动已验证的运行逻辑。
+- [首次公开云端 CI](https://github.com/Yuna-Nexus/zetro-daily-recommendations/actions/runs/40257352595) 通过；当时源码版本为 2aaee00，生产 Secrets 和 Variables 均为 0。
+- [用户自选篇数/比例/时间更新的云端 CI](https://github.com/Yuna-Nexus/zetro-daily-recommendations/actions/runs/40260155331) 通过，代码版本 5e8929b：154 项 Python 测试、13 项 Worker 测试和离线端到端流程成功。默认无 cron，篇数未设置时会在模型/API 客户端初始化前报错。
